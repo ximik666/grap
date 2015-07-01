@@ -6,10 +6,33 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 import sqlite3 as sql
 from flask import Flask, json, render_template, request, url_for,jsonify
+from apscheduler.scheduler import Scheduler
 import pygal
+import atexit
+import subprocess
 from pygal.style import BlueStyle
 # Initialize the Flask application
 app = Flask(__name__)
+
+cron = Scheduler(daemon=True)
+# Explicitly kick off the background thread
+cron.start()
+
+@cron.interval_schedule(seconds=2)
+def job_function():
+    # Do your work here
+    outputs,test = subprocess.Popen(
+        'netstat -an | grep 80 |wc -l ',
+        stdout=subprocess.PIPE,
+        shell=True
+    ).communicate()
+    print outputs
+
+# Shutdown your cron thread if the web process is stopped
+atexit.register(lambda: cron.shutdown(wait=False))
+
+
+
 
 @app.route('/')
 def form():
