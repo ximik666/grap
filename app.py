@@ -7,15 +7,15 @@ sys.setdefaultencoding('utf-8')
 import sqlite3 as sql
 from flask import Flask, json, render_template, request, url_for,jsonify
 import pygal
-from pygal.style import LightSolarizedStyle
+from pygal.style import BlueStyle
 # Initialize the Flask application
 app = Flask(__name__)
 
 @app.route('/')
 def form():
     ss = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
-    bar_chart = pygal.Bar(style=LightSolarizedStyle)                                            # Then create a bar graph object
-    bar_chart.add('Fibonacci', ss )  # Add some values
+    bar_chart = pygal.Bar(style=BlueStyle)                                            # Then create a bar graph object
+    bar_chart.add('Fibonacci',ss )  # Add some values
     bar_chart.render_to_file('static/bar_chart.svg')                          # Save the svg to a file
     return render_template('bar.html')
 
